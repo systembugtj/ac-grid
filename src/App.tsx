@@ -128,6 +128,26 @@ function App() {
             <button onClick={() => rerender()} className="border p-2">
                 Rerender
             </button>
+            <h1>Vite + React</h1>
+            <div className="card">
+                <Label>My Label</Label>
+                <br />
+                <Input
+                    placeholder="Custom count"
+                    value={inputCustomCountValue}
+                    onChange={(e) => setInputCustomCountValue(e.target.value)}
+                />
+                <br />
+                <Button onClick={handleClickCustomCount}>
+                    count is {count}
+                </Button>
+                <p>
+                    Edit <code>src/App.tsx</code> and save to test HMR
+                </p>
+            </div>
+            <p className="read-the-docs">
+                Click on the Vite and React logos to learn more
+            </p>
         </>
     );
 }
