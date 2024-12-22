@@ -1,53 +1,158 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useReducer } from "react";
+import reactLogo from "./assets/react.svg";
+import viteLogo from "/vite.svg";
+import "./App.css";
+import mockData from "./data/data.json";
 
 // https://nodejs.org/api/packages.html#packages_self_referencing_a_package_using_its_name
-import { Button, Label, Input } from '@receter/my-component-library';
+import { Button, Label, Input } from "@systembug/ac-grid";
+
+import {
+    createColumnHelper,
+    flexRender,
+    getCoreRowModel,
+    useReactTable,
+} from "@tanstack/react-table";
+import { mock } from "node:test";
+
+type Person = {
+    id: number;
+    name: string;
+    email: string;
+    phone: string;
+};
+
+const columnHelper = createColumnHelper<Person>();
+
+const columns = [
+    columnHelper.accessor("id", {
+        cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("name", {
+        cell: (info) => info.getValue(),
+    }),
+    // you can use different aproach here
+    columnHelper.accessor((row) => row.email, {
+        id: "email",
+        cell: (info) => <i>{info.getValue()}</i>,
+        header: () => <span>Email</span>,
+    }),
+    columnHelper.accessor("phone", {
+        header: () => "Phone",
+        cell: (info) => info.renderValue(),
+    }),
+];
 
 function App() {
-  const [count, setCount] = useState(0)
-  const [inputCustomCountValue, setInputCustomCountValue] = useState('');
+    const [count, setCount] = useState(0);
+    const [inputCustomCountValue, setInputCustomCountValue] = useState("");
 
-  const handleClickCustomCount = () => {
-    if (inputCustomCountValue === '') {
-      setCount(count => count + 1);
-    } else {
-      setCount(Number(inputCustomCountValue));
-    }
-  }
+    const handleClickCustomCount = () => {
+        if (inputCustomCountValue === "") {
+            setCount((count) => count + 1);
+        } else {
+            setCount(Number(inputCustomCountValue));
+        }
+    };
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <Label>My Label</Label><br />
-        <Input
-          placeholder="Custom count"
-          value={inputCustomCountValue}
-          onChange={(e) => setInputCustomCountValue(e.target.value)}
-        /><br />
-        <Button onClick={handleClickCustomCount}>
-          count is {count}
-        </Button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    const [data] = useState(() => [...mockData]);
+    const rerender = useReducer(() => ({}), {})[1];
+
+    const table = useReactTable({
+        data,
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+    });
+
+    return (
+        <>
+            <div className="flex justify-center h-screen">
+                <table className="my-auto border">
+                    <thead>
+                        {table.getHeaderGroups().map((headerGroup) => (
+                            <tr
+                                key={headerGroup.id}
+                                className="border-b text-gray-800 uppercase"
+                            >
+                                {headerGroup.headers.map((header) => (
+                                    <th
+                                        key={header.id}
+                                        className="px-4 pr-2 py-4 font-medium text-left"
+                                    >
+                                        {header.isPlaceholder
+                                            ? null
+                                            : flexRender(
+                                                  header.column.columnDef
+                                                      .header,
+                                                  header.getContext()
+                                              )}
+                                    </th>
+                                ))}
+                            </tr>
+                        ))}
+                    </thead>
+                    <tbody>
+                        {table.getRowModel().rows.map((row) => (
+                            <tr key={row.id}>
+                                {row.getVisibleCells().map((cell) => (
+                                    <td key={cell.id}>
+                                        {flexRender(
+                                            cell.column.columnDef.cell,
+                                            cell.getContext()
+                                        )}
+                                    </td>
+                                ))}
+                            </tr>
+                        ))}
+                    </tbody>
+                    <tfoot>
+                        {table.getFooterGroups().map((footerGroup) => (
+                            <tr key={footerGroup.id} className="border-b">
+                                {footerGroup.headers.map((header) => (
+                                    <th
+                                        key={header.id}
+                                        className="px-4 pt-[14px] pb-[18px]"
+                                    >
+                                        {header.isPlaceholder
+                                            ? null
+                                            : flexRender(
+                                                  header.column.columnDef
+                                                      .footer,
+                                                  header.getContext()
+                                              )}
+                                    </th>
+                                ))}
+                            </tr>
+                        ))}
+                    </tfoot>
+                </table>
+                <div className="h-4" />
+                <button onClick={() => rerender()} className="border p-2">
+                    Rerender
+                </button>
+            </div>
+            <h1>Vite + React</h1>
+            <div className="card">
+                <Label>My Label</Label>
+                <br />
+                <Input
+                    placeholder="Custom count"
+                    value={inputCustomCountValue}
+                    onChange={(e) => setInputCustomCountValue(e.target.value)}
+                />
+                <br />
+                <Button onClick={handleClickCustomCount}>
+                    count is {count}
+                </Button>
+                <p>
+                    Edit <code>src/App.tsx</code> and save to test HMR
+                </p>
+            </div>
+            <p className="read-the-docs">
+                Click on the Vite and React logos to learn more
+            </p>
+        </>
+    );
 }
 
-export default App
+export default App;
