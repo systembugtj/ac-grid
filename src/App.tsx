@@ -1,6 +1,4 @@
 import { useState, useReducer } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
 import mockData from "./data/data.json";
 
@@ -13,7 +11,6 @@ import {
     getCoreRowModel,
     useReactTable,
 } from "@tanstack/react-table";
-import { mock } from "node:test";
 
 type Person = {
     id: number;
@@ -127,30 +124,10 @@ function App() {
                     </tfoot>
                 </table>
                 <div className="h-4" />
-                <button onClick={() => rerender()} className="border p-2">
-                    Rerender
-                </button>
             </div>
-            <h1>Vite + React</h1>
-            <div className="card">
-                <Label>My Label</Label>
-                <br />
-                <Input
-                    placeholder="Custom count"
-                    value={inputCustomCountValue}
-                    onChange={(e) => setInputCustomCountValue(e.target.value)}
-                />
-                <br />
-                <Button onClick={handleClickCustomCount}>
-                    count is {count}
-                </Button>
-                <p>
-                    Edit <code>src/App.tsx</code> and save to test HMR
-                </p>
-            </div>
-            <p className="read-the-docs">
-                Click on the Vite and React logos to learn more
-            </p>
+            <button onClick={() => rerender()} className="border p-2">
+                Rerender
+            </button>
         </>
     );
 }
