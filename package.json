@@ -14,13 +14,13 @@
     ],
     "repository": {
         "type": "git",
-        "url": "https://github.com/receter/my-component-library"
+        "url": "https://github.com/systembugtj/ac-grid"
     },
     "sideEffects": [
         "**/*.css"
     ],
     "scripts": {
-        "dev": "vite --watch",
+        "dev": "vite",
         "build": "tsc -b ./tsconfig.lib.json && vite build",
         "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
         "preview": "vite preview"
