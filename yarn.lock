@@ -942,7 +942,7 @@ __metadata:
     react-dom: "npm:^18.3.1"
     tailwindcss: "npm:^3.4.17"
     typescript: "npm:^5.6.2"
-    vite: "npm:^5.4.4"
+    vite: "npm:^5.4.6"
     vite-plugin-dts: "npm:^4.2.1"
     vite-plugin-lib-inject-css: "npm:^2.1.1"
   peerDependencies:
@@ -4185,9 +4185,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:^5.4.4":
-  version: 5.4.4
-  resolution: "vite@npm:5.4.4"
+"vite@npm:^5.4.6":
+  version: 5.4.11
+  resolution: "vite@npm:5.4.11"
   dependencies:
     esbuild: "npm:^0.21.3"
     fsevents: "npm:~2.3.3"
@@ -4224,7 +4224,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 2752e7dd5584ea7cc057742e8f5cbf2f2bd3a2bceb8794fbd3d52f1e88d362b5ac7f1c70be7a3d01b3d768320c8a8ad0df287fd72f253bf040423c36c67a3e89
+  checksum: d536bb7af57dd0eca2a808f95f5ff1d7b7ffb8d86e17c6893087680a0448bd0d15e07475270c8a6de65cb5115592d037130a1dd979dc76bcef8c1dda202a1874
   languageName: node
   linkType: hard
 
