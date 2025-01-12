@@ -8,8 +8,12 @@ import { CSS } from "@dnd-kit/utilities";
 
 export function DraggableTableHeader<T>({
     header,
+    onMouseEnter,
+    onMouseLeave,
 }: {
     header: Header<T, unknown>;
+    onMouseEnter: () => void;
+    onMouseLeave: () => void;
 }) {
     const { attributes, isDragging, listeners, setNodeRef, transform } =
         useSortable({
@@ -32,6 +36,8 @@ export function DraggableTableHeader<T>({
             ref={setNodeRef}
             style={style}
             className="px-4 pr-2 py-4 font-medium text-left"
+            onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave}
         >
             {header.isPlaceholder
                 ? null

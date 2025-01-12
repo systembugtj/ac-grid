@@ -48,12 +48,13 @@ export function Grid<T extends { userId: string }>({
     );
 
     const [gridData, setGridData] = useState(data);
+
     const table = useReactTable({
         // minimal options
         data: gridData,
         columns,
         getCoreRowModel: getCoreRowModel(),
-        // DnD
+        // Column DnD
         state: {
             columnOrder,
         },
@@ -98,13 +99,17 @@ export function Grid<T extends { userId: string }>({
         () => gridData?.map(({ userId }) => userId),
         [gridData]
     );
+    // Track if over column or over row
+    const [columnHover, setColumnHover] = useState(false);
 
     return (
-        // NOTE: This provider creates div elements, so don't nest inside of <table> elements
+        // NOTE: This DndContext provider creates div elements, so don't nest inside of <table> elements
         <DndContext
             collisionDetection={closestCenter}
-            modifiers={[restrictToHorizontalAxis]}
-            onDragEnd={handleDragEnd}
+            modifiers={[
+                columnHover ? restrictToHorizontalAxis : restrictToVerticalAxis,
+            ]}
+            onDragEnd={columnHover ? handleDragEnd : handleCellDragEnd}
             sensors={sensors}
         >
             <div className={`${className} ${styles.grid}`} {...restProps}>
@@ -121,6 +126,12 @@ export function Grid<T extends { userId: string }>({
                                             <DraggableTableHeader
                                                 key={header.id}
                                                 header={header}
+                                                onMouseEnter={() =>
+                                                    setColumnHover(true)
+                                                }
+                                                onMouseLeave={() =>
+                                                    setColumnHover(false)
+                                                }
                                             />
                                         ))}
                                     </SortableContext>
@@ -128,38 +139,29 @@ export function Grid<T extends { userId: string }>({
                             ))}
                         </thead>
                         <tbody>
-                            <DndContext
-                                collisionDetection={closestCenter}
-                                modifiers={[restrictToVerticalAxis]}
-                                onDragEnd={handleCellDragEnd}
-                                sensors={sensors}
+                            <SortableContext
+                                items={dataIds}
+                                strategy={verticalListSortingStrategy}
                             >
-                                <SortableContext
-                                    items={dataIds}
-                                    strategy={verticalListSortingStrategy}
-                                >
-                                    {table.getRowModel().rows.map((row) => (
-                                        <DraggableRow key={row.id} row={row}>
-                                            {row
-                                                .getVisibleCells()
-                                                .map((cell) => (
-                                                    <SortableContext
-                                                        key={cell.id}
-                                                        items={columnOrder}
-                                                        strategy={
-                                                            horizontalListSortingStrategy
-                                                        }
-                                                    >
-                                                        <DragAlongCell
-                                                            key={cell.id}
-                                                            cell={cell}
-                                                        />
-                                                    </SortableContext>
-                                                ))}
-                                        </DraggableRow>
-                                    ))}
-                                </SortableContext>
-                            </DndContext>
+                                {table.getRowModel().rows.map((row) => (
+                                    <DraggableRow key={row.id} row={row}>
+                                        {row.getVisibleCells().map((cell) => (
+                                            <SortableContext
+                                                key={cell.id}
+                                                items={columnOrder}
+                                                strategy={
+                                                    horizontalListSortingStrategy
+                                                }
+                                            >
+                                                <DragAlongCell
+                                                    key={cell.id}
+                                                    cell={cell}
+                                                />
+                                            </SortableContext>
+                                        ))}
+                                    </DraggableRow>
+                                ))}
+                            </SortableContext>
                         </tbody>
                         <tfoot>
                             {table.getFooterGroups().map((footerGroup) => (
