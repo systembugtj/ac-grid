@@ -3,16 +3,16 @@ import { CSSProperties } from "react";
 import { CSS } from "@dnd-kit/utilities";
 import { Row } from "@tanstack/react-table";
 
-interface DraggableRowProps<T> {
+interface DraggableTableRowProps<T> {
     row: Row<T>;
     children: React.ReactNode;
 }
 
 // Row Component
-export function DraggableRow<T extends { userId: string }>({
+export function DraggableTableRow<T extends { userId: string }>({
     row,
     children,
-}: DraggableRowProps<T>) {
+}: DraggableTableRowProps<T>) {
     const { transform, transition, setNodeRef, isDragging } = useSortable({
         id: row.original.userId,
     });

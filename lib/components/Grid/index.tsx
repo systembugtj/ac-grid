@@ -29,7 +29,7 @@ import {
 } from "@dnd-kit/modifiers";
 import { DraggableTableHeader } from "../DraggableTableHeader";
 
-import { DraggableRow } from "../DraggableRow";
+import { DraggableTableRow } from "../DraggableTableRow";
 import { DragAlongCell } from "../DragAlongCell";
 
 interface GridProps<T> extends React.HTMLAttributes<HTMLDivElement> {
@@ -47,7 +47,7 @@ export function Grid<T extends { userId: string }>({
         columns.map((c) => c.id!)
     );
 
-    const [gridData, setGridData] = useState(data);
+    const [gridData, setData] = useState(data);
 
     const table = useReactTable({
         // minimal options
@@ -73,15 +73,16 @@ export function Grid<T extends { userId: string }>({
             setColumnOrder((columnOrder) => {
                 const oldIndex = columnOrder.indexOf(active.id as string);
                 const newIndex = columnOrder.indexOf(over.id as string);
-                return arrayMove(columnOrder, oldIndex, newIndex); //this is just a splice util
+                return arrayMove(columnOrder, oldIndex, newIndex);
             });
         }
     }
+
     // reorder rows after drag & drop
     function handleCellDragEnd(event: DragEndEvent) {
         const { active, over } = event;
         if (active && over && active.id !== over.id) {
-            setGridData((data) => {
+            setData((data) => {
                 const oldIndex = dataIds.indexOf(active.id);
                 const newIndex = dataIds.indexOf(over.id);
                 return arrayMove(data, oldIndex, newIndex); //this is just a splice util
@@ -104,89 +105,107 @@ export function Grid<T extends { userId: string }>({
 
     return (
         // NOTE: This DndContext provider creates div elements, so don't nest inside of <table> elements
-        <DndContext
-            collisionDetection={closestCenter}
-            modifiers={[
-                columnHover ? restrictToHorizontalAxis : restrictToVerticalAxis,
-            ]}
-            onDragEnd={columnHover ? handleDragEnd : handleCellDragEnd}
-            sensors={sensors}
-        >
-            <div className={`${className} ${styles.grid}`} {...restProps}>
-                <div className="flex justify-center h-screen">
-                    <table className="my-auto border">
-                        <thead>
-                            {table.getHeaderGroups().map((headerGroup) => (
-                                <tr key={headerGroup.id}>
-                                    <SortableContext
-                                        items={columnOrder}
-                                        strategy={horizontalListSortingStrategy}
-                                    >
-                                        {headerGroup.headers.map((header) => (
-                                            <DraggableTableHeader
-                                                key={header.id}
-                                                header={header}
-                                                onMouseEnter={() =>
-                                                    setColumnHover(true)
-                                                }
-                                                onMouseLeave={() =>
-                                                    setColumnHover(false)
-                                                }
-                                            />
-                                        ))}
-                                    </SortableContext>
-                                </tr>
-                            ))}
-                        </thead>
-                        <tbody>
-                            <SortableContext
-                                items={dataIds}
-                                strategy={verticalListSortingStrategy}
-                            >
-                                {table.getRowModel().rows.map((row) => (
-                                    <DraggableRow key={row.id} row={row}>
-                                        {row.getVisibleCells().map((cell) => (
-                                            <SortableContext
-                                                key={cell.id}
-                                                items={columnOrder}
-                                                strategy={
-                                                    horizontalListSortingStrategy
-                                                }
-                                            >
-                                                <DragAlongCell
-                                                    key={cell.id}
-                                                    cell={cell}
-                                                />
-                                            </SortableContext>
-                                        ))}
-                                    </DraggableRow>
-                                ))}
-                            </SortableContext>
-                        </tbody>
-                        <tfoot>
-                            {table.getFooterGroups().map((footerGroup) => (
-                                <tr key={footerGroup.id} className="border-b">
-                                    {footerGroup.headers.map((header) => (
-                                        <th
-                                            key={header.id}
-                                            className="px-4 pt-[14px] pb-[18px]"
+        <div className={`${className} ${styles.input}`} {...restProps}>
+            <DndContext
+                collisionDetection={closestCenter}
+                modifiers={[
+                    columnHover
+                        ? restrictToHorizontalAxis
+                        : restrictToVerticalAxis,
+                ]}
+                onDragEnd={columnHover ? handleDragEnd : handleCellDragEnd}
+                sensors={sensors}
+            >
+                <div className={`${className} ${styles.grid}`} {...restProps}>
+                    <div className="flex justify-center h-screen">
+                        <table className="my-auto border">
+                            <thead>
+                                {table.getHeaderGroups().map((headerGroup) => (
+                                    <tr key={headerGroup.id}>
+                                        <SortableContext
+                                            items={columnOrder}
+                                            strategy={
+                                                horizontalListSortingStrategy
+                                            }
                                         >
-                                            {header.isPlaceholder
-                                                ? null
-                                                : flexRender(
-                                                      header.column.columnDef
-                                                          .footer,
-                                                      header.getContext()
-                                                  )}
-                                        </th>
+                                            {headerGroup.headers.map(
+                                                (header) => (
+                                                    <DraggableTableHeader
+                                                        key={header.id}
+                                                        header={header}
+                                                        onMouseEnter={() =>
+                                                            setColumnHover(true)
+                                                        }
+                                                        onMouseLeave={() =>
+                                                            setColumnHover(
+                                                                false
+                                                            )
+                                                        }
+                                                    />
+                                                )
+                                            )}
+                                        </SortableContext>
+                                    </tr>
+                                ))}
+                            </thead>
+                            <tbody>
+                                <SortableContext
+                                    items={dataIds}
+                                    strategy={verticalListSortingStrategy}
+                                >
+                                    {table.getRowModel().rows.map((row) => (
+                                        <DraggableTableRow
+                                            key={row.id}
+                                            row={row}
+                                        >
+                                            {row
+                                                .getVisibleCells()
+                                                .map((cell) => (
+                                                    <SortableContext
+                                                        key={cell.id}
+                                                        items={columnOrder}
+                                                        strategy={
+                                                            horizontalListSortingStrategy
+                                                        }
+                                                    >
+                                                        <DragAlongCell
+                                                            key={cell.id}
+                                                            cell={cell}
+                                                        />
+                                                    </SortableContext>
+                                                ))}
+                                        </DraggableTableRow>
                                     ))}
-                                </tr>
-                            ))}
-                        </tfoot>
-                    </table>
-                    <div className="h-4" />
+                                </SortableContext>
+                            </tbody>
+                            <tfoot>
+                                {table.getFooterGroups().map((footerGroup) => (
+                                    <tr
+                                        key={footerGroup.id}
+                                        className="border-b"
+                                    >
+                                        {footerGroup.headers.map((header) => (
+                                            <th
+                                                key={header.id}
+                                                className="px-4 pt-[14px] pb-[18px]"
+                                            >
+                                                {header.isPlaceholder
+                                                    ? null
+                                                    : flexRender(
+                                                          header.column
+                                                              .columnDef.footer,
+                                                          header.getContext()
+                                                      )}
+                                            </th>
+                                        ))}
+                                    </tr>
+                                ))}
+                            </tfoot>
+                        </table>
+                        <div className="h-4" />
+                    </div>
                 </div>
-            </div>
-        </DndContext>
+            </DndContext>
+        </div>
     );
 }
