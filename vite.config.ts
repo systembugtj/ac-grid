@@ -48,10 +48,4 @@ export default defineConfig({
             },
         },
     },
-    server: {
-        watch: {
-            // Don't ignore lib directory in watch
-            ignored: ["!**/node_modules/**", "!**/lib/**"],
-        },
-    },
 });

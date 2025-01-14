@@ -1,7 +1,7 @@
 import { useSortable } from "@dnd-kit/sortable";
 
 // Cell Component
-export function RowDragHandleCell({ rowId }: { rowId: string }) {
+export function DraggableHandler({ rowId }: { rowId: string }) {
     const { attributes, listeners } = useSortable({
         id: rowId,
     });

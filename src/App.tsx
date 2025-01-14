@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import "./App.css";
 
 // https://nodejs.org/api/packages.html#packages_self_referencing_a_package_using_its_name
-import { Grid, RowDragHandleCell } from "@systembug/ac-grid";
+import { Grid, DraggableHandler } from "@systembug/ac-grid";
 
 import { ColumnDef } from "@tanstack/react-table";
 
@@ -15,7 +15,7 @@ function App() {
             {
                 id: "drag-handle",
                 header: "Move",
-                cell: ({ row }) => <RowDragHandleCell rowId={row.id} />,
+                cell: ({ row }) => <DraggableHandler rowId={row.id} />,
                 size: 60,
             },
             {
