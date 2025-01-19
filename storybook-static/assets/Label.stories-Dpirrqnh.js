@@ -1,3 +1,0 @@
-import{f as n}from"./index-BnUyViK1.js";import{j as c}from"./jsx-runtime-CkxqCPlQ.js";import"./index-DJO9vBfz.js";const p="_label_mog69_1",d={label:p};function r(t){const{className:l,...m}=t;return c.jsx("label",{className:`${l} ${d.label}`,...m})}r.__docgenInfo={description:"",methods:[],displayName:"Label"};const g={title:"Example/Label",component:r,parameters:{layout:"centered"},tags:["autodocs"],argTypes:{},args:{onClick:n()}},e={args:{}};var a,s,o;e.parameters={...e.parameters,docs:{...(a=e.parameters)==null?void 0:a.docs,source:{originalSource:`{
-  args: {}
-}`,...(o=(s=e.parameters)==null?void 0:s.docs)==null?void 0:o.source}}};const f=["Normal"];export{e as Normal,f as __namedExportsOrder,g as default};
