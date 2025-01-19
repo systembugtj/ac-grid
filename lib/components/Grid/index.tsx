@@ -30,7 +30,7 @@ import {
 import { DraggableTableHeader } from "../DraggableTableHeader";
 
 import { DraggableTableRow } from "../DraggableTableRow";
-import { DragAlongCell } from "../DragAlongCell";
+import { DraggableTableCell } from "../DraggableTableCell";
 
 interface GridProps<T> extends React.HTMLAttributes<HTMLDivElement> {
     data: T[];
@@ -154,7 +154,7 @@ export function Grid<T extends { userId: string }>({
                                                     horizontalListSortingStrategy
                                                 }
                                             >
-                                                <DragAlongCell
+                                                <DraggableTableCell
                                                     key={cell.id}
                                                     cell={cell}
                                                 />
